@@ -3,66 +3,258 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kontak | GALANT</title>
+  <title>Hubungi Kami | GALANT</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#90E0EF] to-[#CAF0F8] text-gray-700">
+<body class="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 text-gray-800">
 
   <!-- Header -->
-  <header class="w-full bg-white shadow-md border-b border-gray-200 fixed top-0 left-0 z-40">
+  <header class="bg-gradient-to-r from-slate-800 to-emerald-900 shadow-xl sticky top-0 z-40 border-b-2 border-emerald-700">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-[#0096C7]">GALANT</h1>
-      <nav class="flex items-center gap-6 text-[#0096C7] font-medium">
-        <a href="index.html" class="hover:text-[#0077B6] transition">Home</a>
-        <a href="about.html" class="hover:text-[#0077B6] transition">About</a>
-        <a href="contact.html" class="text-[#0077B6] font-semibold border-b-2 border-[#0077B6]">Contact</a>
-        <div id="cartBtn" class="relative cursor-pointer">
-          <i class="fas fa-shopping-cart text-2xl"></i>
-          <span id="cart-count" class="absolute -top-2 -right-2 bg-[#FF8C7A] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      <h1 class="text-2xl font-bold text-emerald-300 flex items-center gap-2">
+        <i class="fa-solid fa-leaf"></i> GALANT
+      </h1>
+      <nav class="flex items-center gap-6 text-emerald-100 font-medium">
+        <a href="index.html" class="hover:text-amber-300 transition">Home</a>
+        <a href="about.html" class="hover:text-amber-300 transition">About</a>
+        <a href="contact.html" class="text-amber-300 font-semibold border-b-2 border-amber-300">Contact</a>
+        <div id="cartBtn" class="relative cursor-pointer hover:scale-110 transition-transform">
+          <i class="fas fa-shopping-cart text-2xl text-amber-400"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-gradient-to-r from-orange-600 to-amber-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">0</span>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- Konten Utama -->
-  <main class="flex flex-col items-center justify-center mt-24 w-full px-6">
-    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg w-full max-w-sm p-8 text-center">
-
-      <!-- Foto Profil -->
-      <img src="c.jpg" alt="Profil GALANT" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover shadow-md">
-
-      <h2 class="text-xl font-semibold text-[#0096C7]">Hubungi Kami</h2>
-      <p class="text-sm text-gray-600 mb-6">
-        Kami senang mendengar dari Anda! Hubungi tim <strong>GALANT</strong> melalui pilihan di bawah ini.
-      </p>
-
-      <!-- Tombol Kontak -->
-      <div class="space-y-3">
-        <a href="#" class="flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-xl py-3 shadow hover:shadow-md transition">
-          <i class="fa-solid fa-phone text-[#0096C7]"></i>
-          <span>WhatsApp</span>
-        </a>
-        <a href="#" class="flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-xl py-3 shadow hover:shadow-md transition">
-          <i class="fa-solid fa-globe text-[#0096C7]"></i>
-          <span>Website</span>
-        </a>
-        <a href="#" class="flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-xl py-3 shadow hover:shadow-md transition">
-          <i class="fa-solid fa-envelope text-[#0096C7]"></i>
-          <span>Email</span>
-        </a>
-        <a href="#" class="flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-xl py-3 shadow hover:shadow-md transition">
-          <i class="fa-brands fa-instagram text-[#0096C7]"></i>
-          <span>Instagram</span>
-        </a>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden">
+    <div class="container mx-auto px-4 py-16">
+      <div class="bg-gradient-to-r from-teal-700 to-emerald-700 rounded-2xl shadow-2xl p-12 text-center text-white relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="inline-block bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full mb-4">
+            <span class="text-lg font-semibold">📞 Hubungi Kami</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">Ada Pertanyaan?</h1>
+          <p class="text-xl text-teal-100 max-w-2xl mx-auto">
+            Kami siap membantu Anda! Hubungi kami melalui saluran di bawah ini
+          </p>
+        </div>
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-teal-600 rounded-full opacity-20 -ml-32 -mt-32"></div>
+        <div class="absolute bottom-0 right-0 w-48 h-48 bg-emerald-600 rounded-full opacity-20 -mr-24 -mb-24"></div>
       </div>
     </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-10">
+    <div class="grid md:grid-cols-2 gap-8">
+      
+      <!-- Contact Information -->
+      <section class="bg-gradient-to-br from-white to-emerald-50 rounded-2xl shadow-xl p-8 border-2 border-emerald-200">
+        <h2 class="text-3xl font-bold text-emerald-800 mb-6">
+          <i class="fas fa-info-circle text-emerald-600"></i> Informasi Kontak
+        </h2>
+
+        <div class="space-y-6">
+          <!-- WhatsApp -->
+          <div class="flex items-start gap-4 p-4 bg-emerald-100 rounded-lg border-2 border-emerald-300 hover:shadow-lg transition-shadow">
+            <div class="bg-emerald-600 text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fab fa-whatsapp text-2xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-emerald-800 mb-1">WhatsApp</h3>
+              <p class="text-gray-700 mb-2">Hubungi kami untuk pemesanan cepat</p>
+              <a href="https://wa.me/6281335235999" target="_blank" 
+                 class="inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-900 font-semibold">
+                <span>+62 813-3523-5999</span>
+                <i class="fas fa-external-link-alt text-sm"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="flex items-start gap-4 p-4 bg-teal-100 rounded-lg border-2 border-teal-300 hover:shadow-lg transition-shadow">
+            <div class="bg-teal-600 text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-envelope text-2xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-teal-800 mb-1">Email</h3>
+              <p class="text-gray-700 mb-2">Kirim pertanyaan atau saran Anda</p>
+              <a href="mailto:info@galant.id" 
+                 class="text-teal-700 hover:text-teal-900 font-semibold">
+                info@galant.id
+              </a>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="flex items-start gap-4 p-4 bg-amber-100 rounded-lg border-2 border-amber-300 hover:shadow-lg transition-shadow">
+            <div class="bg-amber-600 text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-map-marker-alt text-2xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-amber-800 mb-1">Lokasi</h3>
+              <p class="text-gray-700">
+                Ponorogo, Jawa Timur<br>
+                Indonesia
+              </p>
+            </div>
+          </div>
+
+          <!-- Operating Hours -->
+          <div class="flex items-start gap-4 p-4 bg-slate-100 rounded-lg border-2 border-slate-300 hover:shadow-lg transition-shadow">
+            <div class="bg-slate-600 text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-clock text-2xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-800 mb-1">Jam Operasional</h3>
+              <p class="text-gray-700">
+                <strong>Senin - Sabtu:</strong> 08:00 - 20:00 WIB<br>
+                <strong>Minggu:</strong> 09:00 - 17:00 WIB
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="mt-8 pt-6 border-t-2 border-emerald-200">
+          <h3 class="font-bold text-emerald-800 mb-4">Ikuti Kami</h3>
+          <div class="flex gap-4">
+            <a href="#" class="bg-emerald-600 hover:bg-emerald-700 text-white w-12 h-12 rounded-full flex items-center justify-center transition shadow-lg">
+              <i class="fab fa-facebook-f text-xl"></i>
+            </a>
+            <a href="#" class="bg-pink-600 hover:bg-pink-700 text-white w-12 h-12 rounded-full flex items-center justify-center transition shadow-lg">
+              <i class="fab fa-instagram text-xl"></i>
+            </a>
+            <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center transition shadow-lg">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href="#" class="bg-red-600 hover:bg-red-700 text-white w-12 h-12 rounded-full flex items-center justify-center transition shadow-lg">
+              <i class="fab fa-youtube text-xl"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Form -->
+      <section class="bg-gradient-to-br from-white to-teal-50 rounded-2xl shadow-xl p-8 border-2 border-teal-200">
+        <h2 class="text-3xl font-bold text-teal-800 mb-6">
+          <i class="fas fa-paper-plane text-teal-600"></i> Kirim Pesan
+        </h2>
+
+        <form id="contactForm" class="space-y-4">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap *</label>
+            <input type="text" required 
+                   class="w-full border-2 border-emerald-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                   placeholder="Masukkan nama Anda">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+            <input type="email" required 
+                   class="w-full border-2 border-emerald-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                   placeholder="email@example.com">
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">No. Telepon</label>
+            <input type="tel" 
+                   class="w-full border-2 border-emerald-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                   placeholder="08xxxxxxxxxx">
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Subjek *</label>
+            <select required 
+                    class="w-full border-2 border-emerald-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white">
+              <option value="">Pilih subjek...</option>
+              <option value="order">Pertanyaan Pesanan</option>
+              <option value="product">Informasi Produk</option>
+              <option value="delivery">Pengiriman</option>
+              <option value="complaint">Keluhan</option>
+              <option value="other">Lainnya</option>
+            </select>
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Pesan *</label>
+            <textarea required rows="5"
+                      class="w-full border-2 border-emerald-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white resize-none"
+                      placeholder="Tulis pesan Anda di sini..."></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" 
+                  class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all flex items-center justify-center gap-2">
+            <i class="fas fa-paper-plane"></i>
+            <span>Kirim Pesan</span>
+          </button>
+        </form>
+
+        <!-- Success Message (Hidden by default) -->
+        <div id="successMessage" class="hidden mt-6 bg-emerald-100 border-2 border-emerald-400 text-emerald-800 px-4 py-3 rounded-lg">
+          <i class="fas fa-check-circle mr-2"></i>
+          <strong>Terima kasih!</strong> Pesan Anda telah terkirim. Kami akan segera menghubungi Anda.
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Map Section -->
+    <section class="mt-10 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-emerald-300">
+      <div class="bg-gradient-to-r from-emerald-700 to-teal-700 p-6 text-white">
+        <h2 class="text-2xl font-bold">
+          <i class="fas fa-map-marked-alt mr-2"></i>
+          Temukan Kami
+        </h2>
+        <p class="text-emerald-100 mt-1">Lokasi kami di Ponorogo, Jawa Timur</p>
+      </div>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!3d3956.146012716187!2d111.46066357586738!3d-7.869817378968593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e79bf1a4a6b0c6f%3A0x4027a76e352f750!2sPonorogo%2C%20Jawa%20Timur!5e0!3m2!1sid!2sid!4v1712849200000!5m2!1sid!2sid"
+        width="100%"
+        height="400"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        class="w-full">
+      </iframe>
+    </section>
   </main>
 
   <!-- Footer -->
-  <footer class="w-full bg-white border-t mt-10 py-4 text-center text-sm text-gray-600">
-    &copy; 2025 GALANT. All rights reserved.
+  <footer class="bg-gradient-to-r from-slate-800 via-emerald-900 to-teal-900 text-emerald-100 py-10 mt-10 border-t-2 border-emerald-700">
+    <div class="container mx-auto text-center px-6">
+      <p class="text-lg font-semibold text-emerald-300">GALANT — Segar, Tenang, dan Alami</p>
+      <p class="text-sm text-emerald-200 mt-2">&copy; 2025 GALANT. Semua hak dilindungi.</p>
+    </div>
   </footer>
+
+  <script>
+    // Simple form submission handler
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Show success message
+      document.getElementById('successMessage').classList.remove('hidden');
+      
+      // Reset form
+      this.reset();
+      
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        document.getElementById('successMessage').classList.add('hidden');
+      }, 5000);
+    });
+  </script>
 
 </body>
 </html>
