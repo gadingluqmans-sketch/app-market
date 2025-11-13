@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // --- Elemen utama ---
   const productGrid = document.getElementById('product-grid');
+  const popularCategoriesGrid = document.getElementById('popular-categories-grid'); // <-- TAMBAHAN
   const loader = document.getElementById('loader');
   const errorMessage = document.getElementById('error-message');
   const searchInput = document.getElementById('searchInput');
@@ -38,13 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Data utama ---
   let products = [];
-  let categories = [];
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  // 🔗 API Endpoints
-  const API_BASE_URL = 'api'; // Folder api Anda
-  const PRODUCTS_API_URL = `${API_BASE_URL}/api.php?action=get_products`;
-  const CATEGORIES_API_URL = `${API_BASE_URL}/api.php?action=get_categories`;
+  // 🔗 Ganti endpoint API jadi lokal
+  const API_URL = 'api/api.php?action=get_products';
+  const CATEGORY_API_URL = 'api/api.php?action=get_categories'; // <-- TAMBAHAN
   const SELLER_WHATSAPP_NUMBER = '6281335235999';
 
   // --- Ambil produk dari API lokal ---
@@ -52,70 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
     loader.style.display = 'block';
     errorMessage.classList.add('hidden');
     try {
-      const response = await fetch(PRODUCTS_API_URL);
+      const response = await fetch(API_URL);
       if (!response.ok) throw new Error('HTTP error ' + response.status);
       const data = await response.json();
 
-      // Format data sesuai API Anda
-      products = data.products || data;
+      // Pastikan format data sesuai
+      products = data.products || data; // kalau API return array langsung
       displayProducts(products);
+      // populateCategories(products); // <-- HAPUS INI
     } catch (err) {
-      console.error('Error fetching products:', err);
+      console.error(err);
       errorMessage.classList.remove('hidden');
     } finally {
       loader.style.display = 'none';
     }
-  }
-
-  // --- Ambil kategori dari database ---
-  async function fetchCategories() {
-    try {
-      const response = await fetch(CATEGORIES_API_URL);
-      if (!response.ok) throw new Error('HTTP error ' + response.status);
-      const data = await response.json();
-      
-      if (data.success && data.categories) {
-        categories = data.categories;
-        populateCategories(categories);
-      } else {
-        throw new Error('Invalid categories response');
-      }
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-      // Fallback: ambil kategori unik dari produk
-      const productCategories = [...new Set(products.map(p => p.kategori))].filter(Boolean);
-      populateCategoriesFromProducts(productCategories);
-    }
-  }
-
-  // --- Isi kategori dropdown dari database ---
-  function populateCategories(categoryList) {
-    // Clear existing options except "Semua Kategori"
-    while (categorySelect.children.length > 1) {
-      categorySelect.removeChild(categorySelect.lastChild);
-    }
-    
-    categoryList.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat.slug; // Gunakan slug untuk filtering
-      opt.textContent = cat.name.charAt(0).toUpperCase() + cat.name.slice(1);
-      opt.dataset.categoryId = cat.id;
-      categorySelect.appendChild(opt);
-    });
-  }
-
-  // --- Fallback: Isi kategori dari produk (jika API kategori gagal) ---
-  function populateCategoriesFromProducts(categoryList) {
-    while (categorySelect.children.length > 1) {
-      categorySelect.removeChild(categorySelect.lastChild);
-    }
-    
-    categoryList.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-      categorySelect.appendChild(opt);
-    });
   }
 
   // --- Tampilkan produk ---
@@ -125,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
       productGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">Tidak ada produk ditemukan.</p>`;
       return;
     }
-    
     list.forEach(product => {
       const card = document.createElement('div');
       card.className = 'product-card bg-white rounded-lg shadow-sm overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow';
@@ -136,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="p-4 border-t-2 border-emerald-200 flex flex-col flex-grow">
           <span class="text-xs text-emerald-700 capitalize font-medium">${product.kategori || 'Umum'}</span>
-          <h3 class="text-md font-semibold text-gray-800 mt-1 flex-grow">${product.nama.substring(0, 40)}${product.nama.length > 40 ? '...' : ''}</h3>
+          <h3 class="text-md font-semibold text-gray-800 mt-1 flex-grow">${product.nama.substring(0, 40)}...</h3>
           <div class="mt-4 flex justify-between items-center">
             <p class="text-lg font-bold text-emerald-700">Rp ${Number(product.harga).toLocaleString('id-ID')}</p>
             <button class="add-to-cart-btn bg-gradient-to-r from-emerald-200 to-teal-200 text-emerald-800 hover:from-emerald-300 hover:to-teal-300 rounded-full w-9 h-9 flex items-center justify-center transition-all" data-product-id="${product.id}">
@@ -149,19 +97,82 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- HAPUS FUNGSI populateCategories ---
+  // function populateCategories(products) { ... }
+
+  // --- TAMBAH FUNGSI BARU: Ambil & Tampilkan Kategori ---
+  async function fetchAndDisplayCategories() {
+    // Definisikan ikon & warna (sesuaikan slug dengan database Anda)
+    const categoryIcons = {
+      'bumbu-dapur': 'fas fa-pepper-hot',
+      'sayuran': 'fas fa-carrot',
+      'buah-buahan': 'fas fa-lemon',
+      'protein-hewani': 'fas fa-egg',
+      'seafood': 'fas fa-fish',
+      'default': 'fas fa-star' // Fallback
+    };
+    const categoryColors = {
+      'bumbu-dapur': 'bg-red-200 text-red-600',
+      'sayuran': 'bg-green-200 text-green-600',
+      'buah-buahan': 'bg-yellow-200 text-yellow-600',
+      'protein-hewani': 'bg-blue-200 text-blue-600',
+      'seafood': 'bg-purple-200 text-purple-600',
+      'default': 'bg-gray-200 text-gray-600'
+    };
+
+    try {
+      const response = await fetch(CATEGORY_API_URL);
+      if (!response.ok) throw new Error('Gagal memuat kategori');
+      const data = await response.json();
+
+      if (data.success && data.categories) {
+        const categories = data.categories;
+
+        // 1. Tampilkan Kategori Populer (5 teratas)
+        popularCategoriesGrid.innerHTML = ''; // Hapus 'Memuat kategori...'
+        categories.slice(0, 5).forEach(cat => {
+          const icon = categoryIcons[cat.slug] || categoryIcons['default'];
+          const color = categoryColors[cat.slug] || categoryColors['default'];
+          
+          const link = document.createElement('a');
+          link.href = '#';
+          link.className = 'category-link flex flex-col items-center p-3 rounded-lg hover:bg-emerald-100 transition w-20 cursor-pointer';
+          link.dataset.categorySlug = cat.slug;
+          
+          link.innerHTML = `
+            <div class="${color} p-3 rounded-full mb-1"><i class="${icon} fa-lg"></i></div>
+            <span class="text-sm font-medium text-center">${cat.name}</span>
+          `;
+          popularCategoriesGrid.appendChild(link);
+        });
+
+        // 2. Isi Dropdown Filter Kategori
+        categorySelect.innerHTML = '<option value="all">Semua Kategori</option>'; // Reset
+        categories.forEach(cat => {
+          const opt = document.createElement('option');
+          opt.value = cat.slug;
+          opt.textContent = `${cat.name} (${cat.product_count})`; // Tampilkan nama + jumlah produk
+          categorySelect.appendChild(opt);
+        });
+        
+      } else {
+        popularCategoriesGrid.innerHTML = '<p class="text-slate-500 w-full">Gagal memuat kategori.</p>';
+      }
+    } catch (err) {
+      console.error(err);
+      popularCategoriesGrid.innerHTML = '<p class="text-red-500 w-full">Terjadi kesalahan.</p>';
+    }
+  }
+
+
   // --- Filter produk ---
   function filterProducts() {
     const query = searchInput.value.toLowerCase();
     const selectedCategory = categorySelect.value;
-    
-    let filtered = products.filter(p => 
-      p.nama.toLowerCase().includes(query)
-    );
-    
+    let filtered = products.filter(p => p.nama.toLowerCase().includes(query));
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(p => p.kategori === selectedCategory);
     }
-    
     displayProducts(filtered);
   }
 
@@ -169,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function showProductDetail(id) {
     const p = products.find(x => x.id == id);
     if (!p) return;
-    
     modalImage.src = p.image;
     modalCategory.textContent = p.kategori || 'Umum';
     modalProductName.textContent = p.nama;
@@ -230,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="flex items-center space-x-3">
           <img src="${item.image}" alt="${item.nama}" class="w-12 h-12 object-contain rounded">
           <div>
-            <p class="font-semibold text-gray-800">${item.nama.substring(0, 30)}${item.nama.length > 30 ? '...' : ''}</p>
+            <p class="font-semibold text-gray-800">${item.nama.substring(0, 30)}...</p>
             <p class="text-sm text-emerald-700">Rp ${price.toLocaleString('id-ID')}</p>
           </div>
         </div>
@@ -249,11 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeBtn = e.target.closest('.remove-btn');
     if (removeBtn) {
       const index = removeBtn.dataset.index;
-      const removedItem = cart[index];
       cart.splice(index, 1);
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCart();
-      showToast(`${removedItem.nama.substring(0, 20)}... dihapus dari keranjang.`);
+      showToast('Item dihapus dari keranjang.');
     }
   });
 
@@ -291,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const li = document.createElement('li');
       li.className = 'flex justify-between';
       li.innerHTML = `
-        <span>${item.nama.substring(0, 30)}${item.nama.length > 30 ? '...' : ''}</span>
+        <span>${item.nama.substring(0, 30)}...</span>
         <span class="text-emerald-700 font-semibold">Rp ${price.toLocaleString('id-ID')}</span>
       `;
       checkoutList.appendChild(li);
@@ -323,12 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const nohp = document.getElementById('nohp').value;
     const catatan = document.getElementById('catatan').value || '-';
     
-    // Validasi form
-    if (!nama || !alamat || !nohp) {
-      showToast('Harap isi semua field yang wajib!');
-      return;
-    }
-    
     // Hitung total
     let total = 0;
     let itemList = '';
@@ -338,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
       itemList += `${index + 1}. ${item.nama} - Rp ${price.toLocaleString('id-ID')}%0A`;
     });
     
-    // Format pesan WhatsApp
+    // Kirim ke WhatsApp
     const message = `*PESANAN BARU - GALANT* 🌿%0A%0A` +
                     `*Nama:* ${nama}%0A` +
                     `*Alamat:* ${alamat}%0A` +
@@ -396,7 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Event produk ---
   searchInput.addEventListener('input', filterProducts);
   categorySelect.addEventListener('change', filterProducts);
-  
   productGrid.addEventListener('click', e => {
     const addBtn = e.target.closest('.add-to-cart-btn');
     if (addBtn) {
@@ -406,18 +408,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = e.target.closest('.product-card');
     if (card) showProductDetail(card.dataset.productId);
   });
+
+  // <-- TAMBAHAN: Event listener untuk klik kategori populer -->
+  popularCategoriesGrid.addEventListener('click', e => {
+    e.preventDefault();
+    const categoryLink = e.target.closest('.category-link');
+    if (categoryLink) {
+      const slug = categoryLink.dataset.categorySlug;
+      categorySelect.value = slug; // Atur nilai dropdown
+      filterProducts(); // Panggil fungsi filter yang sudah ada
+      
+      // Scroll ke grid produk untuk UX yang lebih baik
+      document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
   
   modalAddToCartBtn.addEventListener('click', () => {
     addToCart(modalAddToCartBtn.dataset.productId);
     hideModal();
   });
-  
   closeModalBtn.addEventListener('click', hideModal);
-  
   modal.addEventListener('click', e => {
     if (e.target === modal) hideModal();
   });
-  
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (!modal.classList.contains('hidden')) hideModal();
@@ -429,19 +442,85 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutModal.classList.add('hidden');
         document.body.style.overflow = 'auto';
       }
-      if (!successCard.classList.contains('hidden')) {
-        closeCard.click();
-      }
     }
   });
 
-  // --- Inisialisasi ---
-  async function initialize() {
-    await fetchProducts();
-    await fetchCategories();
-    updateCart();
+  // --- Jalankan ---
+  fetchProducts();
+  fetchAndDisplayCategories(); // <-- TAMBAHAN
+  updateCart();
+
+  // ========== HERO SLIDER ==========
+  console.log('Initializing hero slider...');
+  
+  let currentSlide = 0;
+  const slider = document.getElementById('heroSlider');
+  const dots = document.querySelectorAll('.slider-dot'); // <-- SEKARANG BERHASIL
+  const totalSlides = 3;
+
+  console.log('Slider element:', slider);
+  console.log('Dots found:', dots.length); // <-- SEHARUSNYA 3
+
+  function goToSlide(index) {
+    currentSlide = index;
+    if (slider) {
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      console.log('Moving to slide:', currentSlide);
+    }
+    
+    // Update dots
+    dots.forEach((dot, i) => {
+      if (i === currentSlide) {
+        dot.classList.remove('opacity-50');
+        dot.classList.add('opacity-100');
+      } else {
+        dot.classList.remove('opacity-100');
+        dot.classList.add('opacity-50');
+      }
+    });
   }
 
-  // --- Jalankan ---
-  initialize();
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    goToSlide(currentSlide);
+  }
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    goToSlide(currentSlide);
+  }
+
+  // Navigation buttons
+  const nextBtn = document.getElementById('nextSlide');
+  const prevBtn = document.getElementById('prevSlide');
+  
+  console.log('Next button:', nextBtn);
+  console.log('Prev button:', prevBtn);
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      console.log('Next button clicked');
+      nextSlide();
+    });
+  }
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      console.log('Prev button clicked');
+      prevSlide();
+    });
+  }
+
+  // Dot navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      console.log('Dot clicked:', index);
+      goToSlide(index);
+    });
+  });
+
+  // Auto-play slider
+  if (slider) {
+    console.log('Starting auto-play...');
+    setInterval(nextSlide, 5000);
+  }
 });
