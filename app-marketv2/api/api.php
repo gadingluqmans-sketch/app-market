@@ -169,8 +169,8 @@ function get_categories($conn) {
         FROM categories c 
         LEFT JOIN products p ON c.slug = p.category 
         GROUP BY c.id 
-        ORDER BY c.name ASC
-    ";
+        ORDER BY product_count DESC
+    "; // <-- UBAH DI SINI
     
     $result = $conn->query($query);
     $categories = [];
