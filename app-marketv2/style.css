@@ -1,0 +1,35 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.product-card {
+  background-color: #FFFFFF !important;
+  color: #333 !important;
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 12px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  border-color: #FF8C7A;
+}
+
+#productModal {
+  transition: opacity 0.3s ease;
+}
+
+.toast-notification {
+  background-color: #FFFFFF;
+  color: #333;
+  border-left: 4px solid #FF8C7A;
+  animation: toast-in 0.5s ease-out forwards;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+@keyframes toast-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}

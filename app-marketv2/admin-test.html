@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Test - GALANT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 text-gray-800 p-8">
+
+  <h1 class="text-3xl font-bold text-emerald-800 mb-6">Admin Test Page</h1>
+
+  <!-- Tab Navigation -->
+  <div class="bg-white rounded-xl shadow-lg mb-6 p-2 flex gap-2 border-2 border-emerald-200">
+    <button id="tabProducts" class="tab-btn flex-1 py-3 rounded-lg font-semibold transition bg-gradient-to-r from-emerald-700 to-teal-700 text-white">
+      <i class="fa-solid fa-box"></i> Produk
+    </button>
+    <button id="tabCategories" class="tab-btn flex-1 py-3 rounded-lg font-semibold transition text-slate-700 hover:bg-emerald-100">
+      <i class="fa-solid fa-tags"></i> Kategori
+    </button>
+  </div>
+
+  <!-- PRODUCTS TAB -->
+  <div id="productsTab" class="tab-content">
+    <div class="bg-white p-6 rounded-xl shadow-lg border-2 border-emerald-200">
+      <h2 class="text-xl font-semibold text-emerald-800">Products Tab Content</h2>
+      <p>This is the products tab.</p>
+    </div>
+  </div>
+
+  <!-- CATEGORIES TAB -->
+  <div id="categoriesTab" class="tab-content hidden">
+    <div class="bg-white p-6 rounded-xl shadow-lg border-2 border-emerald-200">
+      <h2 class="text-xl font-semibold text-emerald-800">Categories Tab Content</h2>
+      <p>This is the categories tab.</p>
+      <button id="testApiBtn" class="mt-4 bg-emerald-700 text-white px-4 py-2 rounded-lg">Test API</button>
+      <pre id="apiResult" class="mt-4 bg-gray-100 p-4 rounded-lg text-sm overflow-auto max-h-96"></pre>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50"></div>
+
+  <script>
+    console.log('Script starting...');
+
+    // Toast function
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      const bgColor = type === 'success' ? 'bg-emerald-700' : 'bg-red-600';
+      toast.className = `${bgColor} text-white px-4 py-3 rounded-lg shadow-lg mt-2 flex items-center gap-2`;
+      toast.innerHTML = `
+        <i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+      `;
+      document.getElementById('toast-container').appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded');
+      
+      const tabProducts = document.getElementById('tabProducts');
+      const tabCategories = document.getElementById('tabCategories');
+      const productsTab = document.getElementById('productsTab');
+      const categoriesTab = document.getElementById('categoriesTab');
+      const testApiBtn = document.getElementById('testApiBtn');
+
+      console.log('Elements found:', {
+        tabProducts,
+        tabCategories,
+        productsTab,
+        categoriesTab
+      });
+
+      // Switch to Products tab
+      if (tabProducts) {
+        tabProducts.addEventListener('click', () => {
+          console.log('Products tab clicked');
+          productsTab.classList.remove('hidden');
+          categoriesTab.classList.add('hidden');
+          tabProducts.className = 'tab-btn flex-1 py-3 rounded-lg font-semibold transition bg-gradient-to-r from-emerald-700 to-teal-700 text-white';
+          tabCategories.className = 'tab-btn flex-1 py-3 rounded-lg font-semibold transition text-slate-700 hover:bg-emerald-100';
+          showToast('Switched to Products tab');
+        });
+      }
+
+      // Switch to Categories tab
+      if (tabCategories) {
+        tabCategories.addEventListener('click', () => {
+          console.log('Categories tab clicked');
+          categoriesTab.classList.remove('hidden');
+          productsTab.classList.add('hidden');
+          tabCategories.className = 'tab-btn flex-1 py-3 rounded-lg font-semibold transition bg-gradient-to-r from-emerald-700 to-teal-700 text-white';
+          tabProducts.className = 'tab-btn flex-1 py-3 rounded-lg font-semibold transition text-slate-700 hover:bg-emerald-100';
+          showToast('Switched to Categories tab');
+        });
+      }
+
+      // Test API button
+      if (testApiBtn) {
+        testApiBtn.addEventListener('click', async () => {
+          console.log('Testing API...');
+          const resultDiv = document.getElementById('apiResult');
+          resultDiv.textContent = 'Loading...';
+          
+          try {
+            const response = await fetch('api/api.php?action=get_categories');
+            console.log('Response status:', response.status);
+            
+            const text = await response.text();
+            console.log('Response text:', text);
+            
+            try {
+              const data = JSON.parse(text);
+              resultDiv.textContent = JSON.stringify(data, null, 2);
+              showToast('API call successful!');
+            } catch (e) {
+              resultDiv.textContent = 'Response is not JSON:\n' + text;
+              showToast('Response is not valid JSON', 'error');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            resultDiv.textContent = 'Error: ' + error.message;
+            showToast('API call failed', 'error');
+          }
+        });
+      }
+
+      showToast('Page loaded successfully!');
+    });
+  </script>
+</body>
+</html>
